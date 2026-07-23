@@ -1,0 +1,87 @@
+﻿@model IT15_INATO_POS.ViewModels.UserManagementViewModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-warning text-dark py-3">
+                    <h4 class="mb-0"><i class="bi bi-pencil me-2"></i>Edit User</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="alert alert-info mb-4">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Note:</strong> Password changes should be done via the "Forgot Password" feature or by the user themselves in their profile.
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FirstName" class="form-label fw-bold"></label>
+                                <input asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="LastName" class="form-label fw-bold"></label>
+                                <input asp-for="LastName" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-bold"></label>
+                            <input asp-for="Email" class="form-control" type="email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="RoleName" class="form-label fw-bold"></label>
+                            <select asp-for="RoleName" class="form-select">
+                                <option value="">-- Select Role --</option>
+                                @if (ViewBag.Roles != null)
+                                {
+#pragma warning disable S3267
+ing disable S3267
+                        foreach (var role in ViewBag.Roles as List<Microsoft.AspNetCore.Identity.IdentityRole> ?? new List<Microsoft.AspNetCore.Identity.IdentityRole>())
+                                    {
+                                        <option value="@role.Name">@role.Name</option>
+                    #pragma warning restore S3267
+    }
+#pragma warning restore S3267
+                    }
+                            </select>
+                            <span asp-validation-for="RoleName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input asp-for="IsActive" class="form-check-input" />
+                            <label asp-for="IsActive" class="form-check-label fw-bold"></label>
+                        </div>
+
+                        <hr />
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-x-circle me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-check-circle me-1"></i>Update User
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

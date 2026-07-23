@@ -1,0 +1,57 @@
+﻿@page
+@model EmailModel
+@{
+    ViewData["Title"] = "Manage Email";
+    ViewData["ActivePage"] = ManageNavPages.Email;
+}
+
+<div class="fade-in">
+    <h3 class="fw-bold text-gradient-primary mb-4">
+        <i class="bi bi-envelope me-2"></i>Manage Email
+    </h3>
+
+    <div class="row">
+        <div class="col-md-12">
+            <form id="email-form" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                @if (Model.IsEmailConfirmed)
+                {
+                    <div class="alert alert-success mb-3" role="alert">
+                        <i class="bi bi-check-circle me-2"></i>
+                        Your email is <strong>confirmed</strong>.
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning mb-3" role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Your email is <strong>not confirmed</strong>.
+                        <button type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-sm btn-warning ms-2">
+                            Send verification email
+                        </button>
+                    </div>
+                }
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label fw-bold">Current Email</label>
+                    <input asp-for="Email" class="form-control bg-light" disabled />
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Input.NewEmail" class="form-label fw-bold">New Email</label>
+                    <input asp-for="Input.NewEmail" class="form-control" autocomplete="email" inputmode="email" type="email" />
+                    <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
+                </div>
+
+                <button id="change-email-button" type="submit" class="btn btn-primary">
+                    <i class="bi bi-envelope-check me-2"></i>Change Email
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

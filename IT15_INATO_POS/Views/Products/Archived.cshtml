@@ -1,0 +1,131 @@
+﻿@model IT15_INATO_POS.ViewModels.CombinedArchiveViewModel
+@{
+    ViewData["Title"] = "Archive - Products & Users";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2 class="fw-bold" style="color: #1E293B;">
+                <i class="bi bi-archive me-2" style="color: #4F46E5;"></i>Archive
+            </h2>
+            <p class="text-muted">Restore previously archived products or users</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-controller="Products" asp-action="Index" class="btn btn-outline-secondary me-2">
+                <i class="bi bi-box-seam me-1"></i>Products
+            </a>
+            <a asp-controller="UserManagement" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-people me-1"></i>Users
+            </a>
+        </div>
+    </div>
+
+    <!-- Archived Products Section -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header" style="background: #4F46E5; color: white;">
+            <h5 class="mb-0"><i class="bi bi-box-seam me-2"></i>Archived Products</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead style="background: #F8FAFC;">
+                        <tr>
+                            <th>Archived Date</th>
+                            <th>Product Name</th>
+                            <th>SKU</th>
+                            <th>Variations</th>
+                            <th>Archived By</th>
+                            <th class="text-center">Actions</th>
+                    </thead>
+                    <tbody>
+                        @if (Model.ArchivedProducts.Any())
+                        {
+                            @foreach (var item in Model.ArchivedProducts)
+                            {
+                                <tr>
+                                    <td>@item.ArchivedDate.ToString("MMM dd, yyyy HH:mm")</td>
+                                    <td><strong style="color: #1E293B;">@item.ProductName</strong></td>
+                                    <td><code>@item.SKU</code></td>
+                                    <td><span class="badge" style="background: #3B82F6;">@item.VariationCount variations</span></td>
+                                    <td><span class="text-muted">@item.ArchivedByUser?.FullName ?? item.ArchivedBy</span></td>
+                                    <td class="text-center">
+                                        <form asp-controller="Products" asp-action="RestoreProduct" asp-route-id="@item.ArchiveID" method="post" class="d-inline"
+                                              onsubmit="return confirm('Restore this product? It will be reactivated.');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm" style="background: #10B981; color: white; border: none;">
+                                                <i class="bi bi-arrow-counterclockwise me-1"></i>Restore
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">No archived products.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Archived Users Section -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header" style="background: #10B981; color: white;">
+            <h5 class="mb-0"><i class="bi bi-people me-2"></i>Archived Users</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead style="background: #F8FAFC;">
+                        <tr>
+                            <th>Archived Date</th>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Original Role</th>
+                            <th>Archived By</th>
+                            <th class="text-center">Actions</th>
+                    </thead>
+                    <tbody>
+                        @if (Model.ArchivedUsers.Any())
+                        {
+                            @foreach (var item in Model.ArchivedUsers)
+                            {
+                                <tr>
+                                    <td>@item.ArchivedDate.ToString("MMM dd, yyyy HH:mm")</td>
+                                    <td>
+                                        <strong style="color: #1E293B;">@item.FirstName @item.LastName</strong>
+                                        <br />
+                                        <small class="text-muted">ID: @item.OriginalUserId</small>
+                                    </td>
+                                    <td>@item.Email</td>
+                                    <td><span class="badge" style="background: #8B5CF6;">@item.RoleName</span></td>
+                                    <td><span class="text-muted">@item.ArchivedByUser?.FullName ?? item.ArchivedBy</span></td>
+                                    <td class="text-center">
+                                        <form asp-controller="UserManagement" asp-action="RestoreUser" asp-route-id="@item.OriginalUserId" method="post" class="d-inline"
+                                              onsubmit="return confirm('Restore this user? They will be reactivated.');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm" style="background: #10B981; color: white; border: none;">
+                                                <i class="bi bi-arrow-counterclockwise me-1"></i>Restore
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">No archived users.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

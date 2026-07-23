@@ -1,0 +1,84 @@
+﻿@model IT15_INATO_POS.ViewModels.ProductViewModel
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-warning text-dark py-3">
+                    <h4 class="mb-0"><i class="bi bi-pencil me-2"></i>Edit Product</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <input type="hidden" asp-for="ProductID" />
+
+                        <div class="mb-3">
+                            <label asp-for="ProductName" class="form-label"></label>
+                            <input asp-for="ProductName" class="form-control" />
+                            <span asp-validation-for="ProductName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SKU" class="form-label"></label>
+                            <input asp-for="SKU" class="form-control" />
+                            <span asp-validation-for="SKU" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label">Image URL (Absolute URL from internet)</label>
+                            <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/images/product.jpg" />
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            <small class="text-muted">Paste the full image URL from the internet (e.g., https://i.imgur.com/example.jpg)</small>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Current Image Preview</label>
+                                <div>
+                                    <img src="@Model.ImageUrl" alt="Product Image Preview" style="max-width: 200px; max-height: 150px; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; padding: 4px;"
+                                         referrerpolicy="no-referrer"
+                                         onerror="this.onerror=null; this.alt='Image failed to load'; this.style.opacity='0.5';">
+                                </div>
+                                <small class="text-muted">If image doesn't load, the URL may be invalid or blocked</small>
+                            </div>
+                        }
+
+                        <div class="form-check mb-3">
+                            <input asp-for="IsActive" class="form-check-input" />
+                            <label asp-for="IsActive" class="form-check-label"></label>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-x-circle me-1"></i>Cancel
+                            </a>
+                            <button type="submit" name="submitAction" value="update" class="btn btn-warning">
+                                <i class="bi bi-check-circle me-1"></i>Update Product
+                            </button>
+                            <button type="submit" name="submitAction" value="archive" class="btn btn-danger"
+                                    onclick="return confirm('⚠️ ARCHIVE PRODUCT\n\nAre you sure you want to archive this product?\n\nProduct: @Model.ProductName\nSKU: @Model.SKU\n\nThis product will be moved to the archive and can be restored later.');">
+                                <i class="bi bi-archive me-1"></i>Archive Product
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

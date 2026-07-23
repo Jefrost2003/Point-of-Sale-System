@@ -1,0 +1,105 @@
+﻿@model IT15_INATO_POS.Models.Product
+@{
+    ViewData["Title"] = "Archive Product";
+}
+
+<div class="container mt-4 fade-in">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header py-3" style="background: #c49a6c; color: white;">
+                    <h4 class="mb-0"><i class="bi bi-archive me-2"></i>Confirm Archive</h4>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Warning Alert -->
+                    <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill fs-4 me-3" style="color: #c49a6c;"></i>
+                        <div>
+                            <strong>Warning!</strong> This action will archive (deactivate) the product.
+                            It will no longer appear in POS or active product lists, but all historical records
+                            (transactions, sales items) will be preserved. You can reactivate it later by editing the product.
+                        </div>
+                    </div>
+
+                    <!-- Product Information -->
+                    <h5 class="fw-bold mb-4" style="color: #212529;">Product Information</h5>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Product Name:</div>
+                        <div class="col-md-9">@Model.ProductName</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">SKU:</div>
+                        <div class="col-md-9"><code>@Model.SKU</code></div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Description:</div>
+                        <div class="col-md-9">@(Model.Description ?? "—")</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Current Status:</div>
+                        <div class="col-md-9">
+                            @if (Model.IsActive)
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactive</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Total Variations:</div>
+                        <div class="col-md-9">
+                            <span class="badge bg-info">@(Model.ProductVariations?.Count ?? 0)</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Created Date:</div>
+                        <div class="col-md-9">@Model.CreatedDate.ToString("MMMM dd, yyyy hh:mm tt")</div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.ModifiedBy))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Last Modified:</div>
+                            <div class="col-md-9">@(Model.ModifiedDate?.ToString("MMMM dd, yyyy hh:mm tt") ?? "—")</div>
+                        </div>
+                    }
+
+                    <!-- Product Image Preview (if available) -->
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Image:</div>
+                            <div class="col-md-9">
+                                <img src="@Model.ImageUrl" alt="@Model.ProductName" style="max-width: 200px; max-height: 200px; object-fit: cover; border-radius: 8px; border: 1px solid #dee2e6;">
+                            </div>
+                        </div>
+                    }
+
+                    <hr class="my-4">
+
+                    <!-- Action Buttons -->
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="ProductID" />
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-x-circle me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn" style="background: #c49a6c; color: white;">
+                                <i class="bi bi-archive me-1"></i>Archive Product
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

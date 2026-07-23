@@ -1,0 +1,461 @@
+﻿@model IT15_INATO_POS.ViewModels.POSViewModel
+@{
+    ViewData["Title"] = "Point of Sale";
+}
+
+<div class="fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold mb-1" style="color: #1E293B;">Point of Sale</h1>
+            <p class="text-secondary mb-0">Process sales quickly and efficiently</p>
+        </div>
+        <span class="badge" style="background: #10B981; color: white; font-size: 1rem; padding: 0.75rem 1.25rem;">
+            <i class="bi bi-circle-fill me-2" style="font-size: 0.5rem;"></i>
+            System Online
+        </span>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm" style="min-height: 600px;">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <h5 class="mb-0 fw-bold" style="color: #1E293B;">
+                                <i class="bi bi-grid-3x3-gap me-2" style="color: #4F46E5;"></i>Products Catalog
+                            </h5>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="bi bi-search" style="color: #4F46E5;"></i>
+                                </span>
+                                <input type="text" id="searchProduct" class="form-control border-start-0"
+                                       placeholder="Search by product name, size, or color...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" style="max-height: 650px; overflow-y: auto;">
+                    <div class="row g-3" id="productsList">
+                        @foreach (var product in Model.Products)
+                        {
+                            foreach (var variation in product.ProductVariations!)
+                            {
+                                <div class="col-md-4 col-sm-6 product-item" data-name="@product.ProductName @variation.Size @variation.Color">
+                                    <div class="card product-card h-100 border">
+                                        <div class="position-relative">
+                                            @if (!string.IsNullOrEmpty(variation.ImageUrl) && variation.ImageUrl.StartsWith("http"))
+                                            {
+                                                <img src="@variation.ImageUrl" class="product-image card-img-top" 
+                                                     style="width: 100%; height: 180px; object-fit: cover; border-radius: 0.5rem 0.5rem 0 0;"
+                                                     alt="@product.ProductName" />
+                                            }
+                                            else if (!string.IsNullOrEmpty(product.ImageUrl) && product.ImageUrl.StartsWith("http"))
+                                            {
+                                                <img src="@product.ImageUrl" class="product-image card-img-top" 
+                                                     style="width: 100%; height: 180px; object-fit: cover; border-radius: 0.5rem 0.5rem 0 0;"
+                                                     alt="@product.ProductName" />
+                                            }
+                                            else
+                                            {
+                                                <div class="product-image-placeholder" style="width: 100%; height: 180px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); display: flex; align-items: center; justify-content: center; border-radius: 0.5rem 0.5rem 0 0;">
+                                                    <i class="bi bi-image text-secondary" style="font-size: 2rem;"></i>
+                                                    <span class="ms-2 text-secondary">No Image</span>
+                                                </div>
+                                            }
+                                            @if (variation.IsLowStock)
+                                            {
+                                                <span class="badge position-absolute top-0 end-0 m-2" style="background: #F59E0B; color: white;">
+                                                    <i class="bi bi-exclamation-triangle me-1"></i>Low Stock
+                                                </span>
+                                            }
+                                        </div>
+                                        <div class="card-body p-3">
+                                            <h6 class="fw-bold mb-2" style="color: #1E293B;">@product.ProductName</h6>
+                                            <div class="d-flex gap-2 mb-2">
+                                                <span class="badge bg-light text-dark border">@variation.Size</span>
+                                                <span class="badge bg-light text-dark border">@variation.Color</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="h5 mb-0 fw-bold" style="color: #4F46E5;">₱@variation.Price.ToString("N2")</span>
+                                                <small class="text-muted">
+                                                    <i class="bi bi-box me-1"></i>
+                                                    <span>@variation.StockLevel</span>
+                                                </small>
+                                            </div>
+                                            @if (variation.StockLevel > 0)
+                                            {
+                                                <button type="button" class="btn w-100 add-to-cart"
+                                                        style="background: #4F46E5; color: white; border: none;"
+                                                        data-variation-id="@variation.VariationID"
+                                                        data-product-name="@product.ProductName"
+                                                        data-size="@variation.Size"
+                                                        data-color="@variation.Color"
+                                                        data-price="@variation.Price"
+                                                        data-stock="@variation.StockLevel"
+                                                        data-image="@(variation.ImageUrl ?? product.ImageUrl)">
+                                                    <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-secondary w-100" disabled>
+                                                    <i class="bi bi-x-circle me-2"></i>Out of Stock
+                                                </button>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-header py-3" style="background: #4F46E5; color: white;">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-cart3 me-2"></i>Shopping Cart
+                        <span class="badge bg-white ms-2" style="color: #4F46E5; font-weight: 600;" id="cartCount">0</span>
+                    </h5>
+                </div>
+                <div class="card-body" style="max-height: 450px; overflow-y: auto; background: #f8f9fa;" id="cartItems">
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-cart-x" style="font-size: 4rem; color: #4F46E5; opacity: 0.3;"></i>
+                        <p class="mt-3 fw-bold">Cart is empty</p>
+                        <small>Add products to get started</small>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="mb-3 p-3 rounded" style="background: #EEF2FF; border-left: 4px solid #4F46E5;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold">Total:</h5>
+                            <h3 class="mb-0 fw-bold" style="color: #4F46E5;" id="cartTotal">₱0.00</h3>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-lg" id="checkoutBtn" disabled
+                                style="background: #4F46E5; color: white; border: none;">
+                            <i class="bi bi-credit-card me-2"></i>Proceed to Checkout
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="clearCartBtn">
+                            <i class="bi bi-trash me-2"></i>Clear Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .product-image {
+            object-fit: cover;
+        }
+        .cart-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 0.375rem;
+            border: 1px solid #dee2e6;
+        }
+        .qty-input {
+            width: 50px;
+            text-align: center;
+        }
+    </style>
+
+    <script>
+        let posCart = [];
+
+        function refreshCartFromServer() {
+            $.ajax({
+                url: '@Url.Action("GetCart", "POS")',
+                type: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        posCart = response.cartItems || [];
+                        updateCartDisplay();
+                    }
+                },
+                error: function() {
+                    console.error('Failed to refresh cart');
+                }
+            });
+        }
+
+        function addToCartAjax(variationId, btn, imageUrl) {
+            $.ajax({
+                url: '@Url.Action("AddToCart", "POS")',
+                type: 'POST',
+                data: {
+                    variationId: variationId,
+                    quantity: 1,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        refreshCartFromServer();
+                        showNotification('success', response.message);
+                    } else {
+                        showNotification('error', response.message);
+                    }
+                },
+                error: function() {
+                    showNotification('error', 'Failed to add item to cart');
+                },
+                complete: function() {
+                    if (btn) {
+                        btn.prop('disabled', false);
+                        btn.html('<i class="bi bi-cart-plus me-2"></i>Add to Cart');
+                        btn.css('background', '#4F46E5');
+                    }
+                }
+            });
+        }
+
+        function updateCartItemQuantity(variationId, quantity) {
+            $.ajax({
+                url: '@Url.Action("UpdateQuantity", "POS")',
+                type: 'POST',
+                data: {
+                    variationId: variationId,
+                    quantity: quantity,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        refreshCartFromServer();
+                    } else {
+                        showNotification('error', response.message);
+                        refreshCartFromServer();
+                    }
+                },
+                error: function() {
+                    showNotification('error', 'Failed to update cart');
+                    refreshCartFromServer();
+                }
+            });
+        }
+
+        function removeCartItem(variationId) {
+            $.ajax({
+                url: '@Url.Action("RemoveFromCart", "POS")',
+                type: 'POST',
+                data: {
+                    variationId: variationId,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        refreshCartFromServer();
+                        showNotification('success', 'Item removed from cart');
+                    } else {
+                        showNotification('error', response.message);
+                    }
+                },
+                error: function() {
+                    showNotification('error', 'Failed to remove item');
+                }
+            });
+        }
+
+        function clearAllCart() {
+            $.ajax({
+                url: '@Url.Action("ClearCart", "POS")',
+                type: 'POST',
+                data: {
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        refreshCartFromServer();
+                        showNotification('success', 'Cart cleared successfully');
+                    } else {
+                        showNotification('error', response.message);
+                    }
+                },
+                error: function() {
+                    showNotification('error', 'Failed to clear cart');
+                }
+            });
+        }
+
+        function updateCartDisplay() {
+            const cartContainer = $('#cartItems');
+            const cartCount = posCart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+            const cartTotal = posCart.reduce((sum, item) => sum + (item.subtotal || 0), 0);
+            
+            if (posCart.length === 0) {
+                cartContainer.html('<div class="text-center text-muted py-5"><i class="bi bi-cart-x" style="font-size: 4rem; color: #4F46E5; opacity: 0.3;"></i><p class="mt-3 fw-bold">Cart is empty</p><small>Add products to get started</small></div>');
+                $('#checkoutBtn').prop('disabled', true);
+            } else {
+                let html = '';
+                for (let i = 0; i < posCart.length; i++) {
+                    const item = posCart[i];
+                    const imageUrl = (item.imageUrl && item.imageUrl.startsWith('http')) ? item.imageUrl : '';
+                    
+                    html += '<div class="cart-item p-3 mb-2 rounded" style="background: white; border-left: 4px solid #4F46E5; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">';
+                    html += '<div class="d-flex gap-3">';
+                    html += '<div style="width: 60px; height: 60px; flex-shrink: 0;">';
+                    
+                    if (imageUrl) {
+                        html += '<img src="' + imageUrl + '" alt="' + escapeHtml(item.productName) + '" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';">';
+                        html += '<div style="display: none; width: 100%; height: 100%; background: #f1f5f9; border-radius: 0.375rem; align-items: center; justify-content: center;"><i class="bi bi-image text-secondary"></i></div>';
+                    } else {
+                        html += '<div style="width: 100%; height: 100%; background: #f1f5f9; border-radius: 0.375rem; display: flex; align-items: center; justify-content: center;"><i class="bi bi-image text-secondary"></i></div>';
+                    }
+                    
+                    html += '</div>';
+                    html += '<div class="flex-grow-1">';
+                    html += '<div class="d-flex justify-content-between align-items-start">';
+                    html += '<div><h6 class="mb-1 fw-bold" style="color: #1E293B;">' + escapeHtml(item.productName) + '</h6>';
+                    html += '<div class="d-flex gap-2 mb-2"><small class="badge bg-light text-dark border">' + escapeHtml(item.size) + '</small><small class="badge bg-light text-dark border">' + escapeHtml(item.color) + '</small></div></div>';
+                    html += '<button type="button" class="btn btn-sm btn-outline-danger remove-from-cart" data-variation-id="' + item.variationID + '"><i class="bi bi-trash"></i></button>';
+                    html += '</div>';
+                    html += '<div class="d-flex justify-content-between align-items-center">';
+                    html += '<div class="d-flex align-items-center">';
+                    html += '<button class="btn btn-sm btn-outline-secondary cart-qty-minus" type="button" data-variation-id="' + item.variationID + '"><i class="bi bi-dash"></i></button>';
+                    html += '<input type="number" class="form-control form-control-sm text-center cart-quantity mx-1 border" value="' + item.quantity + '" min="1" max="' + (item.availableStock || 999) + '" data-variation-id="' + item.variationID + '" style="width: 60px;">';
+                    html += '<button class="btn btn-sm btn-outline-secondary cart-qty-plus" type="button" data-variation-id="' + item.variationID + '"><i class="bi bi-plus"></i></button>';
+                    html += '</div>';
+                    html += '<div class="text-end"><small class="text-muted d-block">₱' + (item.unitPrice || 0).toFixed(2) + ' each</small><strong class="fs-6" style="color: #4F46E5;">₱' + (item.subtotal || 0).toFixed(2) + '</strong></div>';
+                    html += '</div></div></div></div>';
+                }
+                cartContainer.html(html);
+                $('#checkoutBtn').prop('disabled', false);
+                
+                attachCartEvents();
+            }
+            
+            $('#cartCount').text(cartCount);
+            $('#cartTotal').text('₱' + cartTotal.toFixed(2));
+        }
+
+        function attachCartEvents() {
+            $('.remove-from-cart').off('click').on('click', function() { 
+                removeCartItem($(this).data('variation-id')); 
+            });
+            $('.cart-qty-minus').off('click').on('click', function() { 
+                const id = $(this).data('variation-id');
+                const item = posCart.find(i => i.id === id);
+                if (item && item.quantity > 1) {
+                    updateCartItemQuantity(id, item.quantity - 1);
+                } else {
+                    removeCartItem(id);
+                }
+            });
+            $('.cart-qty-plus').off('click').on('click', function() { 
+                const id = $(this).data('variation-id');
+                const item = posCart.find(i => i.id === id);
+                if (item) {
+                    updateCartItemQuantity(id, item.quantity + 1);
+                }
+            });
+            $('.qty-input').off('change').on('change', function() { 
+                const id = $(this).data('variation-id');
+                let newQty = parseInt($(this).val());
+                if (isNaN(newQty) || newQty < 1) newQty = 1;
+                updateCartItemQuantity(id, newQty);
+            });
+        }
+
+        function showNotification(type, message) {
+            var bgColor = type === 'success' ? '#10B981' : (type === 'warning' ? '#F59E0B' : '#EF4444');
+            var icon = type === 'success' ? 'check-circle-fill' : (type === 'warning' ? 'exclamation-triangle-fill' : 'x-circle-fill');
+            
+            var notification = '<div class="alert alert-dismissible fade show position-fixed slide-in" style="top: 80px; right: 20px; z-index: 10000; min-width: 350px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: none; background: ' + bgColor + '; color: white;" role="alert">';
+            notification += '<i class="bi bi-' + icon + ' me-2"></i><strong>' + escapeHtml(message) + '</strong>';
+            notification += '<button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>';
+            notification += '</div>';
+            
+            $('body').append(notification);
+            setTimeout(function() {
+                $('.alert').fadeOut(300, function() { $(this).remove(); });
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text).replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        $(document).ready(function() {
+            refreshCartFromServer();
+            
+            let searchTimeout;
+            $('#searchProduct').on('keyup', function() {
+                clearTimeout(searchTimeout);
+                const value = $(this).val().toLowerCase();
+                searchTimeout = setTimeout(function() {
+                    let visibleCount = 0;
+                    $('.product-item').each(function() {
+                        const productName = $(this).find('.product-card').data('product-name');
+                        const matches = productName ? productName.toLowerCase().indexOf(value) > -1 : false;
+                        $(this).toggle(matches);
+                        if (matches) visibleCount++;
+                    });
+                    if (visibleCount === 0 && value !== '') {
+                        if ($('#noResults').length === 0) {
+                            $('#productsList').append('<div id="noResults" class="col-12 text-center py-5"><i class="bi bi-search" style="font-size: 3rem; color: #4F46E5; opacity: 0.3;"></i><p class="text-muted mt-3">No products found matching "' + escapeHtml(value) + '"</p></div>');
+                        }
+                    } else {
+                        $('#noResults').remove();
+                    }
+                }, 300);
+            });
+            
+            $(document).on('click', '.add-to-cart', function() {
+                const btn = $(this);
+                const variationId = btn.data('variation-id');
+                const imageUrl = btn.data('image');
+                
+                btn.prop('disabled', true);
+                btn.html('<span class="spinner-border spinner-border-sm me-2"></span>Adding...');
+                btn.css('background', '#4338CA');
+                
+                addToCartAjax(variationId, btn, imageUrl);
+            });
+            
+            $('#checkoutBtn').on('click', function() {
+                if (posCart.length === 0) {
+                    showNotification('error', 'Your cart is empty. Add some products first.');
+                    return;
+                }
+                $(this).html('<span class="spinner-border spinner-border-sm me-2"></span>Processing...');
+                $(this).prop('disabled', true);
+                setTimeout(function() {
+                    window.location.href = '@Url.Action("Checkout", "POS")';
+                }, 500);
+            });
+            
+            $('#clearCartBtn').on('click', function() {
+                if (confirm('Are you sure you want to clear the entire cart?')) {
+                    clearAllCart();
+                }
+            });
+            
+            attachCartEvents();
+        });
+    </script>
+    @Html.AntiForgeryToken()
+}

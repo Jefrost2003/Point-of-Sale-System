@@ -1,0 +1,155 @@
+﻿@model IT15_INATO_POS.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="fade-in">
+    <!-- Page Header -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-4">
+        <div>
+            <h1 class="fw-bold mb-1">Dashboard</h1>
+            <p class="text-secondary mb-0">Welcome back! Here's what's happening today.</p>
+        </div>
+        <div class="mt-2 mt-sm-0">
+            <span class="badge bg-secondary">@DateTime.Now.ToString("MMMM dd, yyyy")</span>
+        </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="row g-3 g-md-4 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="icon bg-accent-light text-accent">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <i class="bi bi-arrow-up text-success"></i>
+                </div>
+                <h3>₱@Model.TodaySales.ToString("N0")</h3>
+                <p class="text-secondary mb-0 small">Today's Sales</p>
+                <small class="text-success">@Model.TodayTransactions transactions</small>
+            </div>
+        </div>
+        
+        <div class="col-6 col-lg-3">
+            <div class="stats-card">
+                <div class="icon bg-success-light text-success mb-3">
+                    <i class="bi bi-calendar-week"></i>
+                </div>
+                <h3>₱@Model.WeeklySales.ToString("N0")</h3>
+                <p class="text-secondary mb-0 small">Weekly Sales</p>
+                <small class="text-secondary">Last 7 days</small>
+            </div>
+        </div>
+        
+        <div class="col-6 col-lg-3">
+            <div class="stats-card">
+                <div class="icon bg-info-light text-info mb-3">
+                    <i class="bi bi-calendar-month"></i>
+                </div>
+                <h3>₱@Model.MonthlySales.ToString("N0")</h3>
+                <p class="text-secondary mb-0 small">Monthly Sales</p>
+                <small class="text-secondary">This month</small>
+            </div>
+        </div>
+        
+        <div class="col-6 col-lg-3">
+            <div class="stats-card">
+                <div class="icon bg-warning-light text-warning mb-3">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <h3>@Model.LowStockItemsCount</h3>
+                <p class="text-secondary mb-0 small">Low Stock Items</p>
+                <a href="@Url.Action("LowStock", "Reports")" class="small text-decoration-none">View Details →</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Charts and Activity -->
+    <div class="row g-3 g-md-4">
+        <!-- Sales Chart -->
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-graph-up me-2 text-accent"></i>Sales Trend</span>
+                    <span class="badge bg-secondary">Last 7 Days</span>
+                </div>
+                <div class="card-body">
+                    <canvas id="salesChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Transactions -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <i class="bi bi-clock-history me-2 text-accent"></i>Recent Transactions
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        @foreach (var transaction in Model.RecentTransactions.Take(5))
+                        {
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-secondary">#@transaction.TransID</small>
+                                    <div class="fw-medium">₱@transaction.TotalAmount.ToString("N2")</div>
+                                    <small class="text-secondary">@transaction.TransactionDate.ToString("MMM dd, hh:mm tt")</small>
+                                </div>
+                                <span class="badge bg-primary-light text-primary">@transaction.PaymentMethod</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesData = @Html.Raw(Json.Serialize(Model.SalesChartData));
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: salesData.map(d => d.date),
+                datasets: [{
+                    label: 'Sales (₱)',
+                    data: salesData.map(d => d.amount),
+                    borderColor: '#3B82F6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#3B82F6',
+                    pointBorderColor: 'white',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#E2E8F0' },
+                        ticks: {
+                            callback: function(value) {
+                                return '₱' + value.toLocaleString();
+                            }
+                        }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    </script>
+}

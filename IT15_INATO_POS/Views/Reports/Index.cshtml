@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Reports";
+}
+
+<div class="fade-in">
+    <div class="row mb-4 mt-4">
+        <div class="col-12">
+            <h1 class="fw-bold" style="color: #1E293B;">
+                <i class="bi bi-bar-chart-line me-2" style="color: #4F46E5;"></i>Reports Center
+            </h1>
+            <p class="text-muted mb-0">Access various reports and analytics</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+            <div class="card border-0 shadow-sm h-100 card-hover">
+                <div class="card-body text-center p-5">
+                    <div class="bg-primary bg-opacity-10 p-4 rounded-circle d-inline-block mb-3">
+                        <i class="bi bi-cash-stack text-primary" style="font-size: 3rem; color: #4F46E5;"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3" style="color: #1E293B;">Sales Report</h4>
+                    <p class="text-muted mb-4">View detailed sales analysis and trends</p>
+                    <a asp-action="Sales" class="btn" style="background: #4F46E5; color: white;">
+                        View Report <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card border-0 shadow-sm h-100 card-hover">
+                <div class="card-body text-center p-5">
+                    <div class="bg-success bg-opacity-10 p-4 rounded-circle d-inline-block mb-3">
+                        <i class="bi bi-boxes text-success" style="font-size: 3rem; color: #10B981;"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3" style="color: #1E293B;">Inventory Report</h4>
+                    <p class="text-muted mb-4">Monitor stock levels and inventory value</p>
+                    <a asp-action="Inventory" class="btn" style="background: #10B981; color: white;">
+                        View Report <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card border-0 shadow-sm h-100 card-hover">
+                <div class="card-body text-center p-5">
+                    <div class="bg-warning bg-opacity-10 p-4 rounded-circle d-inline-block mb-3">
+                        <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem; color: #F59E0B;"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3" style="color: #1E293B;">Low Stock Alert</h4>
+                    <p class="text-muted mb-4">Items that need to be restocked</p>
+                    <a asp-action="LowStock" class="btn" style="background: #F59E0B; color: white;">
+                        View Report <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card border-0 shadow-sm h-100 card-hover">
+                <div class="card-body text-center p-5">
+                    <div class="bg-info bg-opacity-10 p-4 rounded-circle d-inline-block mb-3">
+                        <i class="bi bi-trophy text-info" style="font-size: 3rem; color: #3B82F6;"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3" style="color: #1E293B;">Top Selling</h4>
+                    <p class="text-muted mb-4">Best performing products</p>
+                    <a asp-action="TopSelling" class="btn" style="background: #3B82F6; color: white;">
+                        View Report <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card border-0 shadow-sm h-100 card-hover">
+                <div class="card-body text-center p-5">
+                    <div class="bg-danger bg-opacity-10 p-4 rounded-circle d-inline-block mb-3">
+                        <i class="bi bi-receipt text-danger" style="font-size: 3rem; color: #EF4444;"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3" style="color: #1E293B;">Transactions</h4>
+                    <p class="text-muted mb-4">View all transaction history</p>
+                    <a asp-action="Transactions" class="btn" style="background: #EF4444; color: white;">
+                        View Report <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

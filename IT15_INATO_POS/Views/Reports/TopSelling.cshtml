@@ -1,0 +1,107 @@
+﻿@model IEnumerable<IT15_INATO_POS.ViewModels.TopSellingProductViewModel>
+@{
+    ViewData["Title"] = "Top Selling Products";
+}
+
+<div class="fade-in">
+    <div class="row mb-4 mt-4">
+        <div class="col-md-6">
+            <h1 class="fw-bold" style="color: #1E293B;">
+                <i class="bi bi-trophy me-2" style="color: #F59E0B;"></i>Top Selling Products
+            </h1>
+            <p class="text-muted mb-0">Best performing products by sales volume</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Reports
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-calendar-range me-2" style="color: #4F46E5;"></i>Start Date
+                    </label>
+                    <input type="date" name="startDate" class="form-control" value="@ViewBag.StartDate">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-calendar-range me-2" style="color: #4F46E5;"></i>End Date
+                    </label>
+                    <input type="date" name="endDate" class="form-control" value="@ViewBag.EndDate">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn w-100" style="background: #4F46E5; color: white;">
+                        <i class="bi bi-search me-2"></i>Generate Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead style="background: #F8FAFC;">
+                        <tr>
+                            <th>Rank</th>
+                            <th>Product Name</th>
+                            <th class="text-center">Units Sold</th>
+                            <th class="text-end">Total Revenue</th>
+                            <th class="text-end">Average Price</th>
+                    </thead>
+                    <tbody>
+                        @{
+                            int rank = 1;
+                        }
+                        @foreach (var product in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @{
+                                        string rankColor;
+                                        if (rank == 1)
+                                        {
+                                            rankColor = "#F59E0B";
+                                        }
+                                        else if (rank == 2)
+                                        {
+                                            rankColor = "#94A3B8";
+                                        }
+                                        else if (rank == 3)
+                                        {
+                                            rankColor = "#CD7F32";
+                                        }
+                                        else
+                                        {
+                                            rankColor = "#64748B";
+                                        }
+                                    }
+                                    <span class="badge" style="background: @rankColor; font-size: 1rem; padding: 0.5rem 0.75rem;">
+                                        <i class="bi bi-trophy-fill me-1"></i>#@rank
+                                    </span>
+                                </td>
+                                <td class="fw-bold" style="color: #1E293B;">@product.ProductName</td>
+                                <td class="text-center">
+                                    <span class="badge" style="background: #3B82F6; font-size: 0.9rem;">@product.TotalQuantitySold units</span>
+                                </td>
+                                <td class="text-end fw-bold" style="color: #4F46E5; font-size: 1.1rem;">₱@product.TotalRevenue.ToString("N2")</td>
+                                <td class="text-end text-muted">
+                                    @{
+                                        var avgPrice = product.TotalQuantitySold > 0 ? product.TotalRevenue / product.TotalQuantitySold : 0;
+                                    }
+                                    ₱@avgPrice.ToString("N2")
+                                </td>
+                            </tr>
+                            rank++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

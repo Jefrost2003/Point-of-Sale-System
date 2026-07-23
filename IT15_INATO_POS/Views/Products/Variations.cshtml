@@ -1,0 +1,100 @@
+﻿@model IEnumerable<IT15_INATO_POS.Models.ProductVariation>
+@{
+    ViewData["Title"] = "Product Variations";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2 class="fw-bold"><i class="bi bi-list-ul me-2"></i>Variations - @ViewBag.ProductName</h2>
+            <p class="text-muted">Manage size, color, stock levels, and variation images</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-action="Index" class="btn btn-secondary me-2">
+                <i class="bi bi-arrow-left me-1"></i>Back to Products
+            </a>
+            @if (User.IsInRole("Super Admin") || User.IsInRole("Inventory Clerk"))
+            {
+                <a asp-action="CreateVariation" asp-route-productId="@ViewBag.ProductID" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-1"></i>Add Variation
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Image</th>
+                            <th>Variation ID</th>
+                            <th>Size</th>
+                            <th>Color</th>
+                            <th>Price</th>
+                            <th>Stock Level</th>
+                            <th>Low Stock Alert</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                    </thead>
+                    <tbody>
+                        @foreach (var variation in Model)
+                        {
+                            <tr class="@(variation.IsLowStock ? "table-warning" : "")">
+                                <td>
+                                    @if (!string.IsNullOrEmpty(variation.ImageUrl))
+                                    {
+                                        <img src="@variation.ImageUrl" alt="Variation" style="width: 50px; height: 50px; object-fit: cover;"
+                                             onerror="this.onerror=null; this.src='/images/products/placeholder.jpg';" />
+                                    }
+                                    else
+                                    {
+                                        <img src="/images/products/placeholder.jpg" alt="No Image" style="width: 50px; height: 50px; object-fit: cover;" />
+                                    }
+                                    29
+                                <td><strong>#@variation.VariationID</strong>29
+                                <td><span class="badge bg-secondary">@variation.Size</span>29
+                                <td><span class="badge bg-info">@variation.Color</span>29
+                                <td><span class="fw-bold text-success">₱@variation.Price.ToString("N2")</span>29
+                                <td>
+                                    @if (variation.IsLowStock)
+                                    {
+                                        <span class="text-danger fw-bold">
+                                            <i class="bi bi-exclamation-triangle me-1"></i>@variation.StockLevel
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success fw-bold">@variation.StockLevel</span>
+                                    }
+                                    29
+                                <td>@variation.LowStockThreshold</td>
+                                <td>
+                                    @if (variation.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactive</span>
+                                    }
+                                    29
+                                <td>
+                                    @if (User.IsInRole("Super Admin") || User.IsInRole("Inventory Clerk"))
+                                    {
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="EditVariation" asp-route-id="@variation.VariationID" class="btn btn-sm btn-warning" title="Edit Variation">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </div>
+                                    }
+                                    29
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

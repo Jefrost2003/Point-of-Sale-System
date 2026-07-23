@@ -1,0 +1,20 @@
+﻿# Environment files
+.env
+.env.*
+!.env.example
+
+# Sensitive configuration
+appsettings.Production.json
+appsettings.Development.json
+
+# Logs
+*.log
+startup_error.log
+
+# User-specific files
+*.user
+*.suo
+
+# Build results
+bin/
+obj/

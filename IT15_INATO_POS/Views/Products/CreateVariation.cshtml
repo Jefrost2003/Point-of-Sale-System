@@ -1,0 +1,78 @@
+﻿@model IT15_INATO_POS.ViewModels.ProductVariationViewModel
+@{
+    ViewData["Title"] = "Create Variation";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Create Product Variation</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="CreateVariation" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <input type="hidden" asp-for="ProductID" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Size" class="form-label"></label>
+                                <input asp-for="Size" class="form-control" placeholder="e.g., S, M, L, XL" />
+                                <span asp-validation-for="Size" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Color" class="form-label"></label>
+                                <input asp-for="Color" class="form-control" placeholder="e.g., Red, Blue, Black" />
+                                <span asp-validation-for="Color" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Price" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">₱</span>
+                                    <input asp-for="Price" class="form-control" placeholder="0.00" />
+                                </div>
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="StockLevel" class="form-label"></label>
+                                <input asp-for="StockLevel" class="form-control" type="number" />
+                                <span asp-validation-for="StockLevel" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="LowStockThreshold" class="form-label"></label>
+                                <input asp-for="LowStockThreshold" class="form-control" type="number" />
+                                <span asp-validation-for="LowStockThreshold" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label">Variation Image URL (Optional)</label>
+                            <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/variation-image.jpg" />
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            <small class="form-text text-muted">Enter an absolute URL for this specific variation. Leave empty to use the main product image.</small>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Variations" asp-route-id="@Model.ProductID" class="btn btn-secondary">
+                                <i class="bi bi-x-circle me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle me-1"></i>Create Variation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

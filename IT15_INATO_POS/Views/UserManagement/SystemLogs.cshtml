@@ -1,0 +1,139 @@
+﻿@model IEnumerable<IT15_INATO_POS.Models.SystemLog>
+@using IT15_INATO_POS.Models
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "System Logs";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2 class="fw-bold" style="color: #1E293B;">
+                <i class="bi bi-gear me-2" style="color: #4F46E5;"></i>System Logs
+            </h2>
+            <p class="text-muted">Application events - Product CRUD operations, user management actions, profile updates, system errors</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Back to Users
+            </a>
+        </div>
+    </div>
+
+    <!-- Date Range & Module Filter -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold" style="color: #4F46E5;">
+                        <i class="bi bi-calendar-range me-1"></i>Start Date
+                    </label>
+                    <input type="date" name="startDate" class="form-control" value="@ViewBag.StartDate">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold" style="color: #4F46E5;">
+                        <i class="bi bi-calendar-range me-1"></i>End Date
+                    </label>
+                    <input type="date" name="endDate" class="form-control" value="@ViewBag.EndDate">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold" style="color: #4F46E5;">
+                        <i class="bi bi-grid me-1"></i>Module
+                    </label>
+                    <select name="module" class="form-select">
+                        <option value="">All Modules</option>
+                        <option value="Products" selected="@(ViewBag.SelectedModule == "Products")">Products</option>
+                        <option value="ProductVariations" selected="@(ViewBag.SelectedModule == "ProductVariations")">Product Variations</option>
+                        <option value="User Management" selected="@(ViewBag.SelectedModule == "User Management")">User Management</option>
+                        <option value="POS" selected="@(ViewBag.SelectedModule == "POS")">POS / Transactions</option>
+                        <option value="Reports" selected="@(ViewBag.SelectedModule == "Reports")">Reports</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn w-100" style="background: #4F46E5; color: white; border: none;">
+                        <i class="bi bi-search me-1"></i>Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead style="background: #F8FAFC;">
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>User</th>
+                            <th>Role</th>
+                            <th>Module</th>
+                            <th>Action</th>
+                            <th>Details</th>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in Model)
+                        {
+                            var userRoles = log.User != null ? await UserManager.GetRolesAsync(log.User) : new List<string>();
+                            <tr>
+                                <td>@log.Timestamp.ToString("MMM dd, yyyy HH:mm:ss")</td>
+                                <td>
+                                    @if (log.User != null)
+                                    {
+                                        <strong style="color: #1E293B;">@log.User.FullName</strong>
+                                        <br />
+                                        <small class="text-muted">@log.User.Email</small>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">System</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (log.User != null && userRoles.Any())
+                                    {
+                                        foreach (var role in userRoles)
+                                        {
+                                            <span class="badge me-1" style="background: #4F46E5;">@role</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge" style="background: #3B82F6;">@log.Module</span>
+                                </td>
+                                <td>
+                                    @if (log.Action == "Error")
+                                    {
+                                        <span class="badge" style="background: #EF4444;">@log.Action</span>
+                                    }
+                                    else if (log.Action == "Create")
+                                    {
+                                        <span class="badge" style="background: #10B981;">@log.Action</span>
+                                    }
+                                    else if (log.Action == "Update")
+                                    {
+                                        <span class="badge" style="background: #F59E0B;">@log.Action</span>
+                                    }
+                                    else if (log.Action == "Archive")
+                                    {
+                                        <span class="badge" style="background: #64748B;">@log.Action</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@log.Action</span>
+                                    }
+                                </td>
+                                <td><small class="text-muted">@log.Details</small></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

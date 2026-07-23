@@ -1,0 +1,209 @@
+﻿@using IT15_INATO_POS.Utilities
+@model IT15_INATO_POS.Models.Transaction
+@{
+    ViewData["Title"] = "Receipt";
+}
+
+<div class="container mt-4 fade-in">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-lg" id="receiptContent">
+                <div class="card-body p-4">
+                    <!-- Header with Logo -->
+                    <div class="text-center mb-3 pb-3 border-bottom">
+                        <img src="~/images/ootd.png" alt="OOTD Logo" height="60" class="mb-2"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <div style="display: none;">
+                            <i class="bi bi-shop" style="font-size: 3rem; color: var(--primary);"></i>
+                        </div>
+                        <h3 class="fw-bold mb-0" style="color: #4F46E5;">OOTD</h3>
+                        <p class="text-muted mb-0 small">Outfit of the Day - POS System</p>
+                    </div>
+
+                    <!-- Receipt Header -->
+                    <div class="text-center mb-3">
+                        <h5 class="fw-bold mb-2">OFFICIAL RECEIPT</h5>
+                        <h4 class="mb-0 fw-bold" style="color: #4F46E5;">#@Model.TransID.ToString("D6")</h4>
+                    </div>
+
+                    <!-- Transaction Details -->
+                    <div class="row mb-3 g-2">
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded">
+                                <p class="mb-0 small text-muted"><strong>Date & Time</strong></p>
+                                <p class="mb-0">@TimeZoneHelper.ToPhilippineTime(Model.TransactionDate).ToString("MMMM dd, yyyy")</p>
+                                <p class="mb-0 small">@TimeZoneHelper.ToPhilippineTime(Model.TransactionDate).ToString("hh:mm tt")</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded">
+                                <p class="mb-0 small text-muted"><strong>Cashier</strong></p>
+                                <p class="mb-0">@Model.Cashier?.FullName</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded">
+                                <p class="mb-0 small text-muted"><strong>Payment Method</strong></p>
+                                <p class="mb-0">@Model.PaymentMethod</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded">
+                                <p class="mb-0 small text-muted"><strong>Status</strong></p>
+                                <p class="mb-0">@Model.TransactionStatus</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.PayMongoReference))
+                    {
+                        <div class="mb-3 p-2 bg-light rounded">
+                            <p class="mb-0 small"><strong>Reference:</strong> @Model.PayMongoReference</p>
+                        </div>
+                    }
+
+                    <!-- Items Table -->
+                    <table class="table table-sm mb-3">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Item</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-end">Price</th>
+                                <th class="text-end">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.SalesItems!)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@item.ProductVariation?.Product?.ProductName</strong><br>
+                                        <small class="text-muted">@item.ProductVariation?.Size - @item.ProductVariation?.Color</small>
+                                    </td>
+                                    <td class="text-center">@item.Quantity</td>
+                                    <td class="text-end">₱@item.UnitPrice.ToString("N2")</td>
+                                    <td class="text-end fw-bold">₱@item.Subtotal.ToString("N2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <!-- Totals -->
+                    <div class="border-top pt-2 mb-3">
+                        <div class="row">
+                            <div class="col-6 offset-6">
+                                <table class="table table-sm mb-0">
+                                    <tr>
+                                        <td class="text-end"><strong>Subtotal:</strong></td>
+                                        <td class="text-end">₱@Model.TotalAmount.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-end"><strong>Tax (0%):</strong></td>
+                                        <td class="text-end">₱0.00</td>
+                                    </tr>
+                                    <tr class="border-top">
+                                        <td class="text-end"><h5 class="mb-0"><strong>TOTAL:</strong></h5></td>
+                                        <td class="text-end"><h5 class="mb-0 fw-bold" style="color: #10B981;">₱@Model.TotalAmount.ToString("N2")</h5></td>
+                                    </tr>
+                                    @if (Model.PaymentMethod == "Cash")
+                                    {
+                                        <tr>
+                                            <td class="text-end">Amount Paid:</td>
+                                            <td class="text-end fw-bold">₱@Model.AmountPaid.ToString("N2")</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-end"><strong>Change:</strong></td>
+                                            <td class="text-end fw-bold" style="color: #4F46E5;">₱@Model.ChangeAmount.ToString("N2")</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="text-center pt-3 border-top">
+                        <h6 class="fw-bold mb-1">Thank You for Shopping!</h6>
+                        <p class="text-muted mb-0 small">We appreciate your business</p>
+                        @if (!string.IsNullOrEmpty(Model.Notes))
+                        {
+                            <p class="text-muted small mt-2 fst-italic">Note: @Model.Notes</p>
+                        }
+                    </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center mt-4 no-print">
+                <div class="btn-group" role="group">
+                    <a asp-action="Index" class="btn btn-primary">
+                        <i class="bi bi-arrow-left me-2"></i>New Transaction
+                    </a>
+                    <button onclick="downloadPDF()" class="btn btn-success" id="downloadBtn">
+                        <i class="bi bi-download me-2"></i>Download PDF
+                    </button>
+                    <button onclick="window.print()" class="btn btn-secondary">
+                        <i class="bi bi-printer me-2"></i>Print Receipt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        function downloadPDF() {
+            var element = document.getElementById('receiptContent');
+            var receiptId = @Model.TransID;
+            var dateStr = '@DateTime.Now.ToString("yyyyMMdd")';
+            var filename = 'Receipt_' + receiptId + '_' + dateStr + '.pdf';
+
+            var opt = {
+                margin: [10, 10, 10, 10],
+                filename: filename,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    letterRendering: true,
+                    scrollY: 0,
+                    scrollX: 0
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'portrait',
+                    compress: true
+                },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            var btn = document.getElementById('downloadBtn');
+            var originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generating PDF...';
+            btn.disabled = true;
+
+            html2pdf().set(opt).from(element).save().then(function() {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+
+                var notification = document.createElement('div');
+                notification.className = 'alert alert-success alert-dismissible fade show position-fixed';
+                notification.style.cssText = 'top: 80px; right: 20px; z-index: 10000; min-width: 300px;';
+                notification.innerHTML = '<i class="bi bi-check-circle me-2"></i><strong>PDF Downloaded!</strong>' +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
+                document.body.appendChild(notification);
+
+                setTimeout(function() {
+                    notification.remove();
+                }, 3000);
+            }).catch(function(error) {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                alert('Error generating PDF. Please try again.');
+                console.error('PDF Error:', error);
+            });
+        }
+    </script>
+}

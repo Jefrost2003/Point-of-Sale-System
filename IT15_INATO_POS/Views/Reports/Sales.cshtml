@@ -1,0 +1,242 @@
+﻿@model IT15_INATO_POS.ViewModels.SalesReportViewModel
+@{
+    ViewData["Title"] = "Sales Report";
+}
+
+<div class="fade-in">
+    <div class="row mb-4 mt-4">
+        <div class="col-md-6">
+            <h1 class="fw-bold" style="color: #1E293B;">
+                <i class="bi bi-cash-stack me-2" style="color: #4F46E5;"></i>Sales Report
+            </h1>
+            <p class="text-muted mb-0">Comprehensive sales analytics and insights</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Reports
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-calendar-range me-2" style="color: #4F46E5;"></i>Start Date
+                    </label>
+                    <input type="date" name="startDate" class="form-control" value="@ViewBag.StartDate">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-calendar-range me-2" style="color: #4F46E5;"></i>End Date
+                    </label>
+                    <input type="date" name="endDate" class="form-control" value="@ViewBag.EndDate">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn w-100" style="background: #4F46E5; color: white;">
+                        <i class="bi bi-search me-2"></i>Generate Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="stats-card border-0 shadow-sm">
+                <div class="text-center">
+                    <div class="icon-box bg-primary bg-opacity-10 mx-auto mb-3" style="width: 64px; height: 64px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-currency-dollar fs-1" style="color: #4F46E5;"></i>
+                    </div>
+                    <p class="text-muted mb-2">Total Sales</p>
+                    <h2 class="mb-0 fw-bold" style="color: #4F46E5;">₱@Model.TotalSales.ToString("N2")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card border-0 shadow-sm">
+                <div class="text-center">
+                    <div class="icon-box bg-info bg-opacity-10 mx-auto mb-3" style="width: 64px; height: 64px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-receipt fs-1" style="color: #3B82F6;"></i>
+                    </div>
+                    <p class="text-muted mb-2">Total Transactions</p>
+                    <h2 class="mb-0 fw-bold" style="color: #3B82F6;">@Model.TotalTransactions</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card border-0 shadow-sm">
+                <div class="text-center">
+                    <div class="icon-box bg-warning bg-opacity-10 mx-auto mb-3" style="width: 64px; height: 64px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-graph-up-arrow fs-1" style="color: #F59E0B;"></i>
+                    </div>
+                    <p class="text-muted mb-2">Average Transaction</p>
+                    <h2 class="mb-0 fw-bold" style="color: #F59E0B;">₱@Model.AverageTransactionValue.ToString("N2")</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h5 class="mb-0 fw-bold" style="color: #1E293B;">
+                        <i class="bi bi-bar-chart-line me-2" style="color: #4F46E5;"></i>Daily Sales Trend
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="dailySalesChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h5 class="mb-0 fw-bold" style="color: #1E293B;">
+                        <i class="bi bi-pie-chart me-2" style="color: #4F46E5;"></i>Payment Methods
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @foreach (var payment in Model.PaymentMethodBreakdown)
+                    {
+                        <div class="mb-3 p-3 bg-light rounded-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <span class="badge" style="background: #4F46E5;">
+                                        @if (payment.PaymentMethod == "Cash")
+                                        {
+                                            <i class="bi bi-cash me-1"></i>
+                                        }
+                                        else if (payment.PaymentMethod == "GCash")
+                                        {
+                                            <i class="bi bi-phone me-1"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-credit-card me-1"></i>
+                                        }
+                                        @payment.PaymentMethod
+                                    </span>
+                                </div>
+                                <span class="fw-bold" style="color: #4F46E5;">₱@payment.Total.ToString("N2")</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                @{
+                                    var percentage = Model.TotalSales > 0 ? (payment.Total / Model.TotalSales * 100) : 0;
+                                }
+                                <div class="progress-bar" role="progressbar"
+                                     style="width: @percentage.ToString("0")%; background: #4F46E5;">
+                                </div>
+                            </div>
+                            <small class="text-muted">@payment.Count transactions (@percentage.ToString("0.0")%)</small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h5 class="mb-0 fw-bold" style="color: #1E293B;">
+                <i class="bi bi-table me-2" style="color: #4F46E5;"></i>Daily Breakdown
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead style="background: #F8FAFC;">
+                        <tr>
+                            <th>Date</th>
+                            <th class="text-center">Transactions</th>
+                            <th class="text-end">Daily Sales</th>
+                            <th class="text-end">Average</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detail in Model.Details)
+                        {
+                            <tr>
+                                <td>
+                                    <i class="bi bi-calendar3 me-2" style="color: #4F46E5;"></i>
+                                    <strong style="color: #1E293B;">@detail.Date.ToString("MMMM dd, yyyy")</strong>
+                                    <br>
+                                    <small class="text-muted">@detail.Date.ToString("dddd")</small>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge" style="background: #3B82F6;">@detail.TransactionCount</span>
+                                </td>
+                                <td class="text-end fw-bold" style="color: #10B981;">₱@detail.DailySales.ToString("N2")</td>
+                                <td class="text-end text-muted">
+                                    @{
+                                        var averageAmount = detail.TransactionCount > 0 ? detail.DailySales / detail.TransactionCount : 0;
+                                    }
+                                    ₱@averageAmount.ToString("N2")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const ctx = document.getElementById('dailySalesChart').getContext('2d');
+        const dailyData = @Html.Raw(Json.Serialize(Model.Details));
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dailyData.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+                datasets: [{
+                    label: 'Daily Sales (₱)',
+                    data: dailyData.map(d => d.dailySales),
+                    backgroundColor: 'rgba(79, 70, 229, 0.7)',
+                    borderColor: '#4F46E5',
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1E293B',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: '#4F46E5',
+                        borderWidth: 2,
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return 'Sales: ₱' + context.parsed.y.toLocaleString('en-PH', {minimumFractionDigits: 2});
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0, 0, 0, 0.05)', drawBorder: false },
+                        ticks: {
+                            callback: function(value) {
+                                return '₱' + value.toLocaleString('en-PH');
+                            }
+                        }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    </script>
+}

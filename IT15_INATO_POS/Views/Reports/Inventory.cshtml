@@ -1,0 +1,144 @@
+﻿@model IEnumerable<IT15_INATO_POS.ViewModels.InventoryReportViewModel>
+@{
+    ViewData["Title"] = "Inventory Report";
+}
+
+<div class="fade-in">
+    <!-- Page Header -->
+    <div class="row mb-4 mt-4">
+        <div class="col-md-6">
+            <h1 class="fw-bold" style="color: #1E293B;">
+                <i class="bi bi-boxes me-2" style="color: #4F46E5;"></i>Inventory Report
+            </h1>
+            <p class="text-muted mb-0">Current stock levels and inventory value</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Reports
+            </a>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="stats-card border-0 shadow-sm">
+                <div class="text-center">
+                    <div class="icon-box bg-primary bg-opacity-10 mx-auto mb-2" style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-box-seam fs-2" style="color: #4F46E5;"></i>
+                    </div>
+                    <p class="text-muted mb-1 small">Total Products</p>
+                    <h3 class="mb-0 fw-bold" style="color: #4F46E5;">@Model.Count()</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card border-0 shadow-sm">
+                <div class="text-center">
+                    <div class="icon-box bg-success bg-opacity-10 mx-auto mb-2" style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-stack fs-2" style="color: #10B981;"></i>
+                    </div>
+                    <p class="text-muted mb-1 small">Total Stock</p>
+                    <h3 class="mb-0 fw-bold" style="color: #10B981;">@Model.Sum(m => m.TotalStock)</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card border-0 shadow-sm">
+                <div class="text-center">
+                    <div class="icon-box bg-info bg-opacity-10 mx-auto mb-2" style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-currency-dollar fs-2" style="color: #3B82F6;"></i>
+                    </div>
+                    <p class="text-muted mb-1 small">Total Value</p>
+                    <h3 class="mb-0 fw-bold" style="color: #3B82F6;">₱@Model.Sum(m => m.TotalValue).ToString("N2")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card border-0 shadow-sm">
+                <div class="text-center">
+                    <div class="icon-box bg-warning bg-opacity-10 mx-auto mb-2" style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-exclamation-triangle fs-2" style="color: #F59E0B;"></i>
+                    </div>
+                    <p class="text-muted mb-1 small">Low Stock</p>
+                    <h3 class="mb-0 fw-bold" style="color: #F59E0B;">@Model.Sum(m => m.LowStockVariations)</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Details -->
+    @foreach (var product in Model)
+    {
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white py-3 border-bottom">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="mb-0 fw-bold" style="color: #1E293B;">
+                            <i class="bi bi-box me-2" style="color: #4F46E5;"></i>@product.ProductName
+                        </h5>
+                        <small class="text-muted">SKU: @product.SKU</small>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <span class="badge me-2" style="background: #3B82F6;">Total: @product.TotalStock units</span>
+                        <span class="badge" style="background: #10B981;">Value: ₱@product.TotalValue.ToString("N2")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead style="background: #F8FAFC;">
+                            <tr>
+                                <th>Size</th>
+                                <th>Color</th>
+                                <th>Price</th>
+                                <th>Stock Level</th>
+                                <th>Threshold</th>
+                                <th>Status</th>
+                                <th class="text-end">Value</th>
+                        </thead>
+                        <tbody>
+                            @foreach (var variation in product.Variations)
+                            {
+                                <tr class="@(variation.IsLowStock ? "table-warning" : "")">
+                                    <td><span class="badge bg-secondary">@variation.Size</span>29
+                                    <td><span class="badge" style="background: #3B82F6;">@variation.Color</span>29
+                                    <td>₱@variation.Price.ToString("N2")</td>
+                                    <td>
+                                        @if (variation.IsLowStock)
+                                        {
+                                            <span class="badge" style="background: #EF4444;">
+                                                <i class="bi bi-exclamation-triangle me-1"></i>@variation.StockLevel
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge" style="background: #10B981;">@variation.StockLevel</span>
+                                        }
+                                        29
+                                    <td>@variation.LowStockThreshold</td>
+                                    <td>
+                                        @if (variation.IsLowStock)
+                                        {
+                                            <span class="badge" style="background: #F59E0B;">
+                                                <i class="bi bi-exclamation-circle me-1"></i>Low Stock
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge" style="background: #10B981;">
+                                                <i class="bi bi-check-circle me-1"></i>In Stock
+                                            </span>
+                                        }
+                                        29
+                                    <td class="text-end fw-bold" style="color: #4F46E5;">₱@((variation.StockLevel * variation.Price).ToString("N2"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,68 @@
+﻿@model IEnumerable<IT15_INATO_POS.Models.ProductVariation>
+@{
+    ViewData["Title"] = "Low Stock Alert";
+}
+
+<div class="fade-in">
+    <!-- Page Header -->
+    <div class="row mb-4 mt-4">
+        <div class="col-md-6">
+            <h1 class="fw-bold" style="color: #1E293B;">
+                <i class="bi bi-exclamation-triangle me-2" style="color: #F59E0B;"></i>Low Stock Alert
+            </h1>
+            <p class="text-muted mb-0">Items that need immediate attention</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Reports
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-warning bg-opacity-10 py-3 border-bottom">
+            <h5 class="mb-0 fw-bold" style="color: #F59E0B;">
+                <i class="bi bi-exclamation-circle me-2"></i>@Model.Count() Items Below Threshold
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead style="background: #F8FAFC;">
+                        <tr>
+                            <th>Product</th>
+                            <th>Size</th>
+                            <th>Color</th>
+                            <th>Current Stock</th>
+                            <th>Threshold</th>
+                            <th>Price</th>
+                            <th class="text-center">Action</th>
+                    </thead>
+                    <tbody>
+                        @foreach (var variation in Model)
+                        {
+                            <tr style="background: #FEF3C7;">
+                                <td class="fw-bold" style="color: #1E293B;">@variation.Product?.ProductName</td>
+                                <td><span class="badge bg-secondary">@variation.Size</span></td>
+                                <td><span class="badge" style="background: #3B82F6;">@variation.Color</span></td>
+                                <td>
+                                    <span class="badge" style="background: #EF4444; font-size: 0.9rem;">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>@variation.StockLevel
+                                    </span>
+                                </td>
+                                <td>@variation.LowStockThreshold</td>
+                                <td class="fw-bold" style="color: #4F46E5;">₱@variation.Price.ToString("N2")</td>
+                                <td class="text-center">
+                                    <a asp-controller="Products" asp-action="EditVariation" asp-route-id="@variation.VariationID"
+                                       class="btn btn-sm" style="background: #F59E0B; color: white;">
+                                        <i class="bi bi-pencil me-1"></i>Update Stock
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

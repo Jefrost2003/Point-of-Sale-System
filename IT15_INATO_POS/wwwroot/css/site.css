@@ -1,0 +1,851 @@
+﻿/* ============================================
+   OOTD SYSTEM - COMPLETE STYLESHEET
+   Light Modern Theme
+   Responsive for All Devices
+   ============================================ */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+
+/* ============================================
+   CSS VARIABLES - LIGHT THEME
+   ============================================ */
+:root {
+    --primary: #0F172A;
+    --primary-light: #1E293B;
+    --secondary: #475569;
+    --accent: #3B82F6;
+    --accent-dark: #2563EB;
+    --accent-light: #EFF6FF;
+    --background: #F8FAFC;
+    --card-bg: #FFFFFF;
+    --border: #E2E8F0;
+    --success: #10B981;
+    --success-light: #D1FAE5;
+    --warning: #F59E0B;
+    --warning-light: #FEF3C7;
+    --danger: #EF4444;
+    --danger-light: #FEE2E2;
+    --info: #3B82F6;
+    --info-light: #DBEAFE;
+    --gray-50: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-300: #CBD5E1;
+    --gray-400: #94A3B8;
+    --gray-500: #64748B;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1E293B;
+    --gray-900: #0F172A;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --transition: all 0.2s ease;
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--background);
+    color: var(--gray-900);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1, .h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+}
+
+h2, .h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+}
+
+h3, .h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+@media (min-width: 768px) {
+    h1, .h1 {
+        font-size: 2.25rem;
+    }
+
+    h2, .h2 {
+        font-size: 1.875rem;
+    }
+
+    h3, .h3 {
+        font-size: 1.5rem;
+    }
+}
+
+.text-secondary {
+    color: var(--gray-500) !important;
+}
+
+/* ============================================
+   MODERN NAVBAR
+   ============================================ */
+.navbar {
+    background: var(--card-bg) !important;
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--gray-900);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .navbar-brand img {
+        height: 32px;
+    }
+
+.navbar-nav .nav-link {
+    color: var(--gray-600);
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+}
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
+        color: var(--accent);
+        background-color: var(--accent-light);
+    }
+
+    .navbar-nav .nav-link i {
+        margin-right: 0.5rem;
+        font-size: 1rem;
+    }
+
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        padding: 1rem 0;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.625rem 0;
+    }
+}
+
+/* Dropdown */
+.dropdown-menu {
+    border: none;
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-lg);
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.dropdown-item {
+    padding: 0.625rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    transition: var(--transition);
+}
+
+    .dropdown-item:hover {
+        background-color: var(--accent-light);
+        color: var(--accent);
+    }
+
+    .dropdown-item i {
+        margin-right: 0.75rem;
+        width: 1.25rem;
+        text-align: center;
+    }
+
+/* ============================================
+   CARDS
+   ============================================ */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+    .card:hover {
+        box-shadow: var(--shadow-md);
+    }
+
+.card-header {
+    background: transparent;
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+.card-footer {
+    background: transparent;
+    border-top: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+}
+
+/* Stats Cards */
+.stats-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    transition: var(--transition);
+}
+
+    .stats-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .stats-card h3 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0;
+    }
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .btn i {
+        font-size: 1rem;
+    }
+
+.btn-primary {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
+    .btn-primary:hover {
+        background-color: var(--accent-dark);
+        transform: translateY(-1px);
+    }
+
+.btn-secondary {
+    background-color: var(--gray-100);
+    border-color: var(--border);
+    color: var(--gray-700);
+}
+
+    .btn-secondary:hover {
+        background-color: var(--gray-200);
+    }
+
+.btn-success {
+    background-color: var(--success);
+    border-color: var(--success);
+    color: white;
+}
+
+    .btn-success:hover {
+        background-color: #059669;
+    }
+
+.btn-danger {
+    background-color: var(--danger);
+    border-color: var(--danger);
+    color: white;
+}
+
+    .btn-danger:hover {
+        background-color: #DC2626;
+    }
+
+.btn-warning {
+    background-color: var(--warning);
+    border-color: var(--warning);
+    color: white;
+}
+
+.btn-outline-primary {
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    background: transparent;
+}
+
+    .btn-outline-primary:hover {
+        background-color: var(--accent);
+        color: white;
+    }
+
+.btn-outline-danger {
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    background: transparent;
+}
+
+    .btn-outline-danger:hover {
+        background-color: var(--danger);
+        color: white;
+    }
+
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+/* ============================================
+   FORMS
+   ============================================ */
+.form-control,
+.form-select {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    transition: var(--transition);
+    background-color: var(--card-bg);
+}
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none;
+    }
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.375rem;
+    color: var(--gray-700);
+}
+
+.form-floating > label {
+    font-weight: 400;
+    color: var(--gray-500);
+}
+
+.input-group-text {
+    background-color: var(--gray-50);
+    border: 1px solid var(--border);
+    color: var(--gray-500);
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+.table {
+    margin-bottom: 0;
+}
+
+    .table thead th {
+        background: var(--gray-50);
+        color: var(--gray-600);
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 0.875rem 1rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .table tbody td {
+        padding: 0.875rem 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.875rem;
+    }
+
+.table-hover tbody tr:hover {
+    background-color: var(--gray-50);
+}
+
+.table-responsive {
+    border-radius: var(--radius-lg);
+    overflow-x: auto;
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+.badge {
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+    .badge.bg-primary {
+        background-color: var(--accent-light) !important;
+        color: var(--accent) !important;
+    }
+
+    .badge.bg-success {
+        background-color: var(--success-light) !important;
+        color: var(--success) !important;
+    }
+
+    .badge.bg-warning {
+        background-color: var(--warning-light) !important;
+        color: var(--warning) !important;
+    }
+
+    .badge.bg-danger {
+        background-color: var(--danger-light) !important;
+        color: var(--danger) !important;
+    }
+
+    .badge.bg-info {
+        background-color: var(--info-light) !important;
+        color: var(--info) !important;
+    }
+
+    .badge.bg-secondary {
+        background-color: var(--gray-100) !important;
+        color: var(--gray-600) !important;
+    }
+
+/* ============================================
+   IDENTITY PAGES (Login, Register, Forgot Password, Reset Password)
+   ============================================ */
+.identity-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+    padding: 1.5rem;
+}
+
+.identity-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    padding: 2rem;
+    width: 100%;
+    max-width: 440px;
+    border: 1px solid var(--border);
+}
+
+@media (max-width: 480px) {
+    .identity-card {
+        padding: 1.5rem;
+    }
+}
+
+.identity-logo {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+    .identity-logo img {
+        height: 70px; /* increased from 60px for better visibility */
+        margin-bottom: 0.75rem;
+    }
+
+    .identity-logo h2 {
+        display: none; /* hide heading text, only show logo image */
+    }
+
+    .identity-logo p {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+    }
+
+.identity-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+    .identity-footer a {
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.875rem;
+    }
+
+/* ============================================
+   PRODUCT CARDS
+   ============================================ */
+.product-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: var(--transition);
+    overflow: hidden;
+    height: 100%;
+}
+
+    .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+    }
+
+.product-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background: var(--gray-50);
+}
+
+/* ============================================
+   POS PAGE SPECIFIC STYLES
+   ============================================ */
+.product-img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.product-img-placeholder {
+    width: 100%;
+    height: 120px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-item {
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+
+    .cart-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+.qty-input {
+    width: 50px;
+    text-align: center;
+}
+
+.sticky-top {
+    position: sticky;
+    top: 90px;
+    z-index: 1020;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    opacity: 0.5;
+}
+
+/* ============================================
+   CART (POS)
+   ============================================ */
+.cart-item strong {
+    font-size: 0.875rem;
+}
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+.container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+    .container-fluid {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container-fluid {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+    background: var(--card-bg);
+    border-top: 1px solid var(--border);
+    padding: 1rem 0;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+    .footer small {
+        color: var(--gray-500);
+        font-size: 0.75rem;
+    }
+
+/* ============================================
+   ALERTS
+   ============================================ */
+.alert {
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+}
+
+    .alert i {
+        font-size: 1.25rem;
+        margin-right: 0.75rem;
+    }
+
+.alert-success {
+    background-color: var(--success-light);
+    color: var(--success);
+}
+
+.alert-danger {
+    background-color: var(--danger-light);
+    color: var(--danger);
+}
+
+.alert-warning {
+    background-color: var(--warning-light);
+    color: var(--warning);
+}
+
+.alert-info {
+    background-color: var(--info-light);
+    color: var(--info);
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gray-100);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 10px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--gray-400);
+    }
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    .navbar, .footer, .btn, .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        padding: 0;
+        margin: 0;
+    }
+
+    .card {
+        border: 1px solid #ddd;
+        box-shadow: none;
+    }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.text-accent {
+    color: var(--accent);
+}
+
+.bg-accent-light {
+    background-color: var(--accent-light);
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.rounded-custom {
+    border-radius: var(--radius-lg);
+}
+
+.shadow-custom {
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   MOBILE TOUCH IMPROVEMENTS
+   ============================================ */
+@media (max-width: 768px) {
+    button, .btn, .nav-link, .dropdown-item {
+        min-height: 44px;
+    }
+
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+
+    .table {
+        font-size: 0.75rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .product-img {
+        height: 100px;
+    }
+}
+
+/* ============================================
+   CHART CONTAINER
+   ============================================ */
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ============================================
+   IMAGE PREVIEW
+   ============================================ */
+.image-preview {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+}
+
+/* ============================================
+   LOADING SPINNER
+   ============================================ */
+.spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15rem;
+}
+
+/* ============================================
+   PRODUCT FILTERING
+   ============================================ */
+.product-item {
+    transition: var(--transition);
+}
+
+/* ============================================
+   LOGO ICON
+   ============================================ */
+.logo-icon {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================
+   FADE IN ANIMATION FOR PAGE TRANSITIONS
+   ============================================ */
+@keyframes fadeInPage {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.page-transition {
+    animation: fadeInPage 0.3s ease-in-out;
+}

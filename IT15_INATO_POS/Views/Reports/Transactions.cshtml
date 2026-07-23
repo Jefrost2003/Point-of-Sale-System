@@ -1,0 +1,107 @@
+﻿@model IEnumerable<IT15_INATO_POS.Models.Transaction>
+@{
+    ViewData["Title"] = "Transaction History";
+}
+
+<div class="fade-in">
+    <div class="row mb-4 mt-4">
+        <div class="col-md-6">
+            <h1 class="fw-bold" style="color: #1E293B;">
+                <i class="bi bi-receipt me-2" style="color: #4F46E5;"></i>Transaction History
+            </h1>
+            <p class="text-muted mb-0">View all completed transactions</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Reports
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-calendar-range me-2" style="color: #4F46E5;"></i>Start Date
+                    </label>
+                    <input type="date" name="startDate" class="form-control" value="@ViewBag.StartDate">
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-calendar-range me-2" style="color: #4F46E5;"></i>End Date
+                    </label>
+                    <input type="date" name="endDate" class="form-control" value="@ViewBag.EndDate">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn w-100" style="background: #4F46E5; color: white;">
+                        <i class="bi bi-search me-1"></i>Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead style="background: #F8FAFC;">
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Date & Time</th>
+                            <th>Cashier</th>
+                            <th>Items</th>
+                            <th>Payment Method</th>
+                            <th>Status</th>
+                            <th class="text-end">Total</th>
+                            <th class="text-center">Action</th>
+                    </thead>
+                    <tbody>
+                        @foreach (var transaction in Model)
+                        {
+                            <tr>
+                                <td><strong style="color: #4F46E5;">#@transaction.TransID</strong></td>
+                                <td>@transaction.TransactionDate.ToString("MMM dd, yyyy hh:mm tt")</td>
+                                <td>@transaction.Cashier?.FullName</td>
+                                <td>
+                                    <span class="badge" style="background: #3B82F6;">@transaction.SalesItems!.Count items</span>
+                                    (@transaction.SalesItems.Sum(si => si.Quantity) units)
+                                </td>
+                                <td>
+                                    @{
+                                        string paymentIcon;
+                                        if (transaction.PaymentMethod == "Cash")
+                                        {
+                                            paymentIcon = "cash";
+                                        }
+                                        else if (transaction.PaymentMethod == "GCash")
+                                        {
+                                            paymentIcon = "phone";
+                                        }
+                                        else
+                                        {
+                                            paymentIcon = "credit-card";
+                                        }
+                                    }
+                                    <span class="badge" style="background: #4F46E5;">
+                                        <i class="bi bi-@paymentIcon me-1"></i>
+                                        @transaction.PaymentMethod
+                                    </span>
+                                </td>
+                                <td><span class="badge" style="background: #10B981;">@transaction.TransactionStatus</span></td>
+                                <td class="text-end fw-bold" style="color: #4F46E5; font-size: 1.1rem;">₱@transaction.TotalAmount.ToString("N2")</td>
+                                <td class="text-center">
+                                    <a asp-controller="POS" asp-action="Receipt" asp-route-id="@transaction.TransID"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
